@@ -83,7 +83,7 @@ export default function UploadBox({ onUploadComplete }: Props) {
   return (
     <div className="mb-8">
       <div
-        className={`border-2 border-dashed transition-colors cursor-pointer p-12 text-center ${
+        className={`border-2 transition-colors cursor-pointer p-12 text-center ${
           isDragging
             ? "border-white bg-zinc-800"
             : "border-zinc-700 hover:border-zinc-500 bg-zinc-950"
@@ -122,7 +122,7 @@ export default function UploadBox({ onUploadComplete }: Props) {
         ) : (
           <div className="space-y-2">
             <p className="text-xs tracking-widest uppercase font-bold text-zinc-300">
-              Drop files here or click to browse
+              Drop pics or vids here or click to browse
             </p>
             <p className="text-xs text-zinc-600 tracking-widest uppercase">
               JPEG · PNG · WEBP · GIF · MP4 · MOV
