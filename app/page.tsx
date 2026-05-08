@@ -14,15 +14,18 @@ interface MediaItem {
 
 export default function Home() {
   const [media, setMedia] = useState<MediaItem[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const fetchMedia = useCallback(async () => {
     try {
       const res = await fetch("/api/media");
       const data = await res.json();
-      setMedia(Array.isArray(data) ? data : []);
+      setMedia(Array.isArray(data.items) ? data.items : []);
+      setTotalCount(typeof data.totalCount === "number" ? data.totalCount : 0);
     } catch {
       setMedia([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -35,15 +38,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="max-w-3xl mx-auto px-4 py-12">
-        <div className="mb-10">
-          <p className="text-xs tracking-widest uppercase font-bold text-zinc-600 mb-1">
-            Nothing Radio
-          </p>
-          <h1 className="text-2xl tracking-widest uppercase font-bold text-white">
-            Upload Gallery
-          </h1>
-        </div>
-
         <UploadBox onUploadComplete={fetchMedia} />
 
         <div className="border-t border-zinc-900 pt-8">
@@ -55,7 +49,7 @@ export default function Home() {
               Loading...
             </p>
           ) : (
-            <Gallery items={media} />
+            <Gallery items={media} totalCount={totalCount} />
           )}
         </div>
       </div>
