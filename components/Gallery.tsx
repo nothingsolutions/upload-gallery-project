@@ -9,11 +9,12 @@ interface MediaItem {
 }
 
 interface Props {
-  items: MediaItem[];
+  visibleItems: MediaItem[];
+  teaserItems: MediaItem[];
   totalCount: number;
+  canExpand: boolean;
+  onExpand: () => void;
 }
-
-const VISIBLE_COUNT = 10;
 
 function MediaTile({ item }: { item: MediaItem }) {
   if (item.resource_type === "video") {
@@ -35,8 +36,14 @@ function MediaTile({ item }: { item: MediaItem }) {
   );
 }
 
-export default function Gallery({ items, totalCount }: Props) {
-  if (items.length === 0) {
+export default function Gallery({
+  visibleItems,
+  teaserItems,
+  totalCount,
+  canExpand,
+  onExpand,
+}: Props) {
+  if (visibleItems.length === 0 && teaserItems.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
         <p className="text-zinc-600 text-xs tracking-widest uppercase font-bold">
@@ -46,23 +53,19 @@ export default function Gallery({ items, totalCount }: Props) {
     );
   }
 
-  const visibleItems = items.slice(0, VISIBLE_COUNT);
-  const teaserItems = items.slice(VISIBLE_COUNT, VISIBLE_COUNT + 2);
-  const showTeasers = totalCount > VISIBLE_COUNT;
-
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
-      {visibleItems.map((item) => (
-        <div
-          key={item.public_id}
-          className="aspect-square overflow-hidden bg-zinc-900"
-        >
-          <MediaTile item={item} />
-        </div>
-      ))}
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
+        {visibleItems.map((item) => (
+          <div
+            key={item.public_id}
+            className="aspect-square overflow-hidden bg-zinc-900"
+          >
+            <MediaTile item={item} />
+          </div>
+        ))}
 
-      {showTeasers &&
-        teaserItems.map((item, index) => {
+        {teaserItems.map((item, index) => {
           const isLast = index === teaserItems.length - 1;
           return (
             <div
@@ -82,6 +85,32 @@ export default function Gallery({ items, totalCount }: Props) {
             </div>
           );
         })}
+      </div>
+
+      {canExpand && (
+        <button
+          onClick={onExpand}
+          className="w-full mt-1 group relative aspect-[3/1] overflow-hidden bg-zinc-900 flex flex-col items-center justify-center gap-2 hover:bg-zinc-800 transition-colors cursor-pointer border-0"
+        >
+          <p className="text-white text-xs tracking-widest uppercase font-bold">
+            Wanna see more??
+          </p>
+          <div className="flex gap-1">
+            {teaserItems.map((item) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={item.public_id}
+                src={item.secure_url}
+                alt=""
+                className="w-10 h-10 object-cover opacity-40 blur-sm group-hover:opacity-60 transition-opacity"
+              />
+            ))}
+          </div>
+          <p className="text-zinc-500 text-xs tracking-widest uppercase">
+            tap to load 10 more
+          </p>
+        </button>
+      )}
     </div>
   );
 }

@@ -3,11 +3,11 @@ import cloudinary from "@/lib/cloudinary";
 
 export async function GET() {
   try {
-    // Fetch top 12 (10 visible + 2 blurred teasers) and total count across all uploads
+    // Fetch top 22 (20 max visible + 2 blurred teasers) and total count
     const result = await cloudinary.search
       .expression("folder:site-uploads")
       .sort_by("created_at", "desc")
-      .max_results(12)
+      .max_results(22)
       .execute();
 
     return NextResponse.json({

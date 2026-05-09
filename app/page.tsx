@@ -12,24 +12,34 @@ interface MediaItem {
   format: string;
 }
 
+const INITIAL_VISIBLE = 10;
+const MAX_VISIBLE = 20;
+
 export default function Home() {
-  const [media, setMedia] = useState<MediaItem[]>([]);
+  const [allItems, setAllItems] = useState<MediaItem[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const fetchMedia = useCallback(async () => {
     try {
       const res = await fetch("/api/media");
       const data = await res.json();
-      setMedia(Array.isArray(data.items) ? data.items : []);
+      setAllItems(Array.isArray(data.items) ? data.items : []);
       setTotalCount(typeof data.totalCount === "number" ? data.totalCount : 0);
+      setExpanded(false);
     } catch {
-      setMedia([]);
+      setAllItems([]);
       setTotalCount(0);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const visibleCount = expanded ? MAX_VISIBLE : INITIAL_VISIBLE;
+  const visibleItems = allItems.slice(0, visibleCount);
+  const teaserItems = allItems.slice(visibleCount, visibleCount + 2);
+  const canExpand = !expanded && totalCount > INITIAL_VISIBLE;
 
   useEffect(() => {
     fetchMedia();
@@ -49,7 +59,13 @@ export default function Home() {
               Loading...
             </p>
           ) : (
-            <Gallery items={media} totalCount={totalCount} />
+            <Gallery
+              visibleItems={visibleItems}
+              teaserItems={teaserItems}
+              totalCount={totalCount}
+              canExpand={canExpand}
+              onExpand={() => setExpanded(true)}
+            />
           )}
         </div>
       </div>
