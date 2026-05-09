@@ -1,5 +1,7 @@
 "use client";
 
+import UploadBox from "@/components/UploadBox";
+
 interface MediaItem {
   public_id: string;
   secure_url: string;
@@ -13,7 +15,7 @@ interface Props {
   teaserItems: MediaItem[];
   totalCount: number;
   canExpand: boolean;
-  onExpand: () => void;
+  onUploadForMore: () => void;
 }
 
 function MediaTile({ item }: { item: MediaItem }) {
@@ -41,7 +43,7 @@ export default function Gallery({
   teaserItems,
   totalCount,
   canExpand,
-  onExpand,
+  onUploadForMore,
 }: Props) {
   if (visibleItems.length === 0 && teaserItems.length === 0) {
     return (
@@ -88,28 +90,32 @@ export default function Gallery({
       </div>
 
       {canExpand && (
-        <button
-          onClick={onExpand}
-          className="w-full mt-1 group relative aspect-[3/1] overflow-hidden bg-zinc-900 flex flex-col items-center justify-center gap-2 hover:bg-zinc-800 transition-colors cursor-pointer border-0"
-        >
-          <p className="text-white text-xs tracking-widest uppercase font-bold">
-            Wanna see more??
-          </p>
-          <div className="flex gap-1">
+        <div className="mt-1 bg-zinc-950 border border-zinc-800 px-6 py-8 flex flex-col items-center gap-5">
+          <div className="flex flex-col items-center gap-1 text-center">
+            <p className="text-white text-xs tracking-widest uppercase font-bold">
+              Wanna see more??
+            </p>
+            <p className="text-zinc-500 text-xs tracking-widest uppercase">
+              join the party, upload a picture to see more.
+            </p>
+          </div>
+
+          <div className="flex gap-1 pointer-events-none select-none">
             {teaserItems.map((item) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={item.public_id}
                 src={item.secure_url}
                 alt=""
-                className="w-10 h-10 object-cover opacity-40 blur-sm group-hover:opacity-60 transition-opacity"
+                className="w-12 h-12 object-cover opacity-30 blur-sm"
               />
             ))}
           </div>
-          <p className="text-zinc-500 text-xs tracking-widest uppercase">
-            tap to load 10 more
-          </p>
-        </button>
+
+          <div className="w-full">
+            <UploadBox onUploadComplete={onUploadForMore} />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -21,13 +21,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
 
-  const fetchMedia = useCallback(async () => {
+  const fetchMedia = useCallback(async (expandAfter = false) => {
     try {
       const res = await fetch("/api/media");
       const data = await res.json();
       setAllItems(Array.isArray(data.items) ? data.items : []);
       setTotalCount(typeof data.totalCount === "number" ? data.totalCount : 0);
-      setExpanded(false);
+      setExpanded(expandAfter);
     } catch {
       setAllItems([]);
       setTotalCount(0);
@@ -64,7 +64,7 @@ export default function Home() {
               teaserItems={teaserItems}
               totalCount={totalCount}
               canExpand={canExpand}
-              onExpand={() => setExpanded(true)}
+              onUploadForMore={() => fetchMedia(true)}
             />
           )}
         </div>
