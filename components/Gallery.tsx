@@ -92,7 +92,7 @@ export default function Gallery({
       {canExpand && (
         <div className="mt-1 bg-zinc-950 border border-zinc-800 px-6 py-8 flex flex-col items-center gap-5">
           <div className="flex flex-col items-center gap-1 text-center">
-            <p className="text-white text-xs tracking-widest uppercase font-bold">
+            <p className="text-white text-2xl tracking-widest uppercase font-bold">
               Wanna see more??
             </p>
             <p className="text-zinc-500 text-xs tracking-widest uppercase">
