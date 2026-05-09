@@ -124,9 +124,6 @@ export default function UploadBox({ onUploadComplete }: Props) {
             <p className="text-xs tracking-widest uppercase font-bold text-zinc-300">
               Drop pics or vids here or click to browse
             </p>
-            <p className="text-xs text-zinc-600 tracking-widest uppercase">
-              JPEG · PNG · WEBP · GIF · MP4 · MOV
-            </p>
           </div>
         )}
       </div>
